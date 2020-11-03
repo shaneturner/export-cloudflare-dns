@@ -1,0 +1,30 @@
+{
+  "name": "export-cloudflare-dns",
+  "version": "1.0.0",
+  "description": "Cloudlfare tools for automation and backup",
+  "keywords": [
+    "Cloudflare",
+    "DNS",
+    "export",
+    "backup"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shaneturner/export-cloudflare-dns.git"
+  },
+  "homepage": "https://github.com/shaneturner/export-cloudflare-dns#README",
+  "engines": {
+    "node": ">= 8"
+  },
+  "scripts": {
+    "get-domains": "node src/getdomains.js"
+  },
+  "author": "Shane Turner",
+  "license": "MIT",
+  "devDependencies": {
+    "axios": "^0.21.0",
+    "dotenv": "^8.2.0",
+    "eslint": "^7.12.1"
+  },
+  "dependencies": {}
+}

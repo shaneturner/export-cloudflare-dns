@@ -1,0 +1,31 @@
+# Bulk export Cloudflare DNS records for all domains
+
+Exports DNS records for each domain on a Cloudflare account
+
+## Installation
+
+Fastest way is:
+
+```
+npx degit shaneturner/export-cloudflare-dns YOUR-PROJECT-NAME
+```
+
+## Configuration
+
+You will need to add your API credentials into a .env file
+
+```
+cp .env.example .env
+```
+
+add the appropriate values for your API key and User email address in the .env file
+
+## Usage
+
+```
+npm run get-domains
+```
+
+## License
+
+[MIT](LICENSE)
