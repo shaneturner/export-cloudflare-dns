@@ -1,6 +1,7 @@
 # Bulk export Cloudflare DNS records for all domains
 
-Exports DNS records for each domain on a Cloudflare account
+Exports DNS records for each domain on a Cloudflare account.
+Domain DNS records are created as individual domainname.txt files and will be placed in a "domains" subdirectory.
 
 ## Installation
 
