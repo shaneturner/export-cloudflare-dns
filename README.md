@@ -7,7 +7,9 @@ Exports DNS records for each domain on a Cloudflare account
 Fastest way is:
 
 ```
-npx degit shaneturner/export-cloudflare-dns YOUR-PROJECT-NAME
+npx degit shaneturner/export-cloudflare-dns#main YOUR-PROJECT-NAME
+cd YOUR-PROJECT-NAME
+npm install
 ```
 
 ## Configuration
