@@ -38,6 +38,11 @@ Change the NULL values to the values supllied in your Cloudlfar account.
 npm run get-domains
 ```
 
+## Errors explained
+
+### Error:Unknown X-Auth-Key or X-Auth-Email
+If you get an error message "Error:Unknown X-Auth-Key or X-Auth-Email", this means you haven't supplied a valid API key and email address in your environment file.
+
 ## License
 
 [MIT](LICENSE)

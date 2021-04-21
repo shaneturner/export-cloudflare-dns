@@ -2,6 +2,9 @@
 
 const axios = require('axios');
 const fs = require('fs');
+const { exit } = require('process');
+
+const args = process.argv.slice(2)
 
 const CLOUDFLARE_ENDPOINT = 'https://api.cloudflare.com/client/v4/';
 let domainList = [];
@@ -111,27 +114,31 @@ function addDomainsToList(domains) {
 function checkEnvironment() {
   // .env file exists, load into ENV
   if (fs.existsSync('.env')) {
-    require('dotenv').config({ path: '.env' });
-    if (process.env.CLOUDFLARE_API_KEY && process.env.CLOUDFLARE_USER_EMAIL) {
-      /*console.log(
-      'CLOUDFLARE_API_KEY: ...' + process.env.CLOUDFLARE_API_KEY.slice(-4)
-    );
-    console.log('CLOUDFLARE_USER_EMAIL: ' + process.env.CLOUDFLARE_USER_EMAIL);*/
-      if (
-        process.env.CLOUDFLARE_API_KEY == 'NULL' &&
-        process.env.CLOUDFLARE_USER_EMAIL == 'NULL'
-      ) {
-        console.info('Please enter you own API and EMAIL in the .env file\n\n');
-      }
-
-      console.info('[Loaded environment data]\n\n');
-    } else {
-      console.log(
-        'Required environment variables not set in .env file: CLOUDFLARE_API_KEY & CLOUDFLARE_USER_EMAIL'
-      );
-      process.exit();
-    }
+    readEnvFile('.env')
+  } else if(fs.existsSync(args[0])) {
+    console.log('Using custom ENV file: ' + args[0]);
+    readEnvFile(args[0])
   } else {
-    console.log('No envirnment ( .env ) file found. Exiting');
+    console.log('No environment ( .env ) file found. Exiting');
+    process.exit(1);
+  }
+}
+
+function readEnvFile(envFilename) {
+  require('dotenv').config({ path: envFilename });
+  if (process.env.CLOUDFLARE_API_KEY && process.env.CLOUDFLARE_USER_EMAIL) {
+    if (
+      process.env.CLOUDFLARE_API_KEY == 'NULL' &&
+      process.env.CLOUDFLARE_USER_EMAIL == 'NULL'
+    ) {
+      console.info('Please enter you own API and EMAIL in the .env file\n\n');
+    }
+
+    console.info('[Loaded environment data]\n\n');
+  } else {
+    console.log(
+      'Required environment variables not set in .env file: CLOUDFLARE_API_KEY & CLOUDFLARE_USER_EMAIL'
+    );
+    process.exit(1);
   }
 }
