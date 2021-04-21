@@ -17,11 +17,20 @@ npm install
 
 You will need to add your API credentials into a .env file
 
-```
+First create a blank `.env` file in the base directory or copy the example file `.env.example` to `.env`
+
+```BASH
 cp .env.example .env
 ```
 
-add the appropriate values for your API key and User email address in the .env file
+Then add the appropriate values for your API key and User email address in the new .env file
+
+```BASH
+CLOUDFLARE_API_KEY=[YOUR API KEY HERE]
+
+CLOUDFLARE_USER_EMAIL=[YOUR USER/LOGIN EMAIL HERE]
+```
+Change the NULL values to the values supllied in your Cloudlfar account.
 
 ## Usage
 
