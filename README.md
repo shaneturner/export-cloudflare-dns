@@ -2,26 +2,26 @@
 
 Exports DNS records for each domain on a Cloudflare account. Domain DNS records are created as individual domainname.txt files and will be placed in a "domains" subdirectory.
 
-This is a Rust implementation of the [original Node.js tool](https://github.com/shaneturner/export-cloudflare-dns), providing better performance and cross-platform support without requiring Node.js or npm.
+This is a Rust implementation of the [original Node.js tool](https://github.com/shaneturner/export-cloudflare-dns-js), providing better performance and cross-platform support without requiring Node.js or npm.
 
 ## Installation
 
 ### Using Pre-built Binaries (Recommended)
-
-Download the latest pre-built binary for your platform from the [releases page](https://github.com/shaneturner/cloudflare-dns-exporter/releases).
+Download the latest pre-built binary for your platform from the [releases page](https://github.com/shaneturner/export-cloudflare-dns/releases).
 
 ### Building from Source
 
 If you prefer to build from source, you'll need Rust installed:
 
 1. [Install Rust](https://www.rust-lang.org/tools/install)
-2. Clone this repositorygit push -u origin main
+2. Clone this repository
+3. Build the project
 
 ```bash
 cargo build --release
 ```
 
-The compiled binary will be available in `target/release/cloudflare-dns-exporter`.
+The compiled binary will be available in `target/release/export-cloudflare-dns`.
 
 ## Configuration
 
