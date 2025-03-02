@@ -45,13 +45,13 @@ CLOUDFLARE_USER_EMAIL=your_email_here
 Simply run the binary:
 
 ```bash
-./cloudflare-dns-exporter
+./export-cloudflare-dns
 ```
 
 If you want to use a custom environment file, you can specify it as an argument:
 
 ```bash
-./cloudflare-dns-exporter custom.env
+./export-cloudflare-dns custom.env
 ```
 
 ## Errors Explained
