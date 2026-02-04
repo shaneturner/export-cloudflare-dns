@@ -1,4 +1,4 @@
-use dotenv::dotenv;
+use dotenvy::dotenv;
 use reqwest::{
     header::{HeaderMap, HeaderValue, CONTENT_TYPE},
     Client,
@@ -84,7 +84,7 @@ fn check_environment() {
         let env_path = &args[1];
         if Path::new(env_path).exists() {
             println!("Using custom ENV file: {}", env_path);
-            if let Err(_) = dotenv::from_path(env_path) {
+            if let Err(_) = dotenvy::from_path(env_path) {
                 println!(
                     "Error: Failed to load environment variables from {}",
                     env_path
@@ -152,7 +152,7 @@ async fn get_domains() -> Result<Vec<Domain>, Box<dyn std::error::Error>> {
 
     loop {
         // Make request to Cloudflare API
-        let response = match client
+        let response: reqwest::Response = match client
             .get(&format!("{}zones", CLOUDFLARE_ENDPOINT))
             .query(&[("page", current_page)])
             .send()
