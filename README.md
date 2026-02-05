@@ -7,7 +7,29 @@ This is a Rust implementation of the [original Node.js tool](https://github.com/
 ## Installation
 
 ### Using Pre-built Binaries (Recommended)
-Download the latest pre-built binary for your platform from the [releases page](https://github.com/shaneturner/export-cloudflare-dns/releases).
+
+Download the latest binary for your platform from the [releases page](https://github.com/shaneturner/export-cloudflare-dns/releases).
+
+| Platform | Binary |
+|----------|--------|
+| Linux (x86_64) | `cloudflare-dns-exporter-linux-amd64` |
+| Linux (ARM64) | `cloudflare-dns-exporter-linux-arm64` |
+| macOS (Intel) | `cloudflare-dns-exporter-macos-amd64` |
+| macOS (Apple Silicon) | `cloudflare-dns-exporter-macos-arm64` |
+| Windows (x86_64) | `cloudflare-dns-exporter-windows-amd64.exe` |
+
+**Linux / macOS:**
+
+```bash
+chmod +x cloudflare-dns-exporter-*
+./cloudflare-dns-exporter-linux-amd64   # or the appropriate binary for your platform
+```
+
+**Windows:**
+
+```powershell
+.\cloudflare-dns-exporter-windows-amd64.exe
+```
 
 ### Building from Source
 
