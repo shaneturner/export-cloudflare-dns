@@ -8,81 +8,73 @@ on:
 permissions:
   contents: write
 
+# Only GitHub-maintained tooling: actions/checkout, plus rustup and the gh CLI
+# that are preinstalled on every hosted runner
+env:
+  GH_TOKEN: ${{ github.token }}
+  GH_REPO: ${{ github.repository }}
+  TAG: ${{ github.ref_name }}
+
 jobs:
+  # Create the release as a draft so a failed build never publishes a partial release.
+  # A release created beforehand on GitHub (e.g. with hand-written notes) is kept as is.
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create draft release
+        run: gh release view "$TAG" > /dev/null 2>&1 || gh release create "$TAG" --draft --verify-tag --generate-notes
+
   build:
+    needs: create-release
     strategy:
       matrix:
         include:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
             binary_name: cloudflare-dns-exporter-linux-amd64
-            use_cross: false
           - target: aarch64-unknown-linux-gnu
-            os: ubuntu-latest
+            os: ubuntu-24.04-arm
             binary_name: cloudflare-dns-exporter-linux-arm64
-            use_cross: true
           - target: x86_64-apple-darwin
             os: macos-latest
             binary_name: cloudflare-dns-exporter-macos-amd64
-            use_cross: false
           - target: aarch64-apple-darwin
             os: macos-latest
             binary_name: cloudflare-dns-exporter-macos-arm64
-            use_cross: false
           - target: x86_64-pc-windows-msvc
             os: windows-latest
             binary_name: cloudflare-dns-exporter-windows-amd64.exe
-            use_cross: false
 
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    env:
+      TARGET: ${{ matrix.target }}
+      BINARY_NAME: ${{ matrix.binary_name }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: ${{ matrix.target }}
+        run: |
+          rustup toolchain install stable --profile minimal --target "$TARGET"
+          rustup default stable
 
-      - name: Install cross
-        if: matrix.use_cross
-        run: cargo install cross --git https://github.com/cross-rs/cross
+      - name: Build
+        run: cargo build --release --target "$TARGET"
 
-      - name: Build with cross
-        if: matrix.use_cross
-        run: cross build --release --target ${{ matrix.target }}
+      - name: Upload binary to release
+        run: |
+          src="target/$TARGET/release/cloudflare-dns-exporter"
+          if [ "$RUNNER_OS" = "Windows" ]; then src="$src.exe"; fi
+          mv "$src" "$BINARY_NAME"
+          gh release upload "$TAG" "$BINARY_NAME" --clobber
 
-      - name: Build with cargo
-        if: "!matrix.use_cross"
-        run: cargo build --release --target ${{ matrix.target }}
-
-      - name: Rename binary (Unix)
-        if: runner.os != 'Windows'
-        run: mv target/${{ matrix.target }}/release/cloudflare-dns-exporter ${{ matrix.binary_name }}
-
-      - name: Rename binary (Windows)
-        if: runner.os == 'Windows'
-        run: mv target/${{ matrix.target }}/release/cloudflare-dns-exporter.exe ${{ matrix.binary_name }}
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.binary_name }}
-          path: ${{ matrix.binary_name }}
-
-  release:
+  publish-release:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-          merge-multiple: true
-
-      - name: Create or update release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: artifacts/*
-          generate_release_notes: true
+      - name: Publish release
+        run: gh release edit "$TAG" --draft=false
