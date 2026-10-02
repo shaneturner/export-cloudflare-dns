@@ -381,7 +381,7 @@ async fn export_dns(
 ) -> Result<(), Box<dyn std::error::Error>> {
     // Get DNS records for domain
     let response = match client
-        .get(&format!(
+        .get(format!(
             "{}zones/{}/dns_records/export",
             CLOUDFLARE_ENDPOINT, domain.id
         ))
@@ -394,10 +394,10 @@ async fn export_dns(
                 "Error: Failed to fetch DNS records for domain {}: {}",
                 domain.name, e
             );
-            return Err(Box::new(std::io::Error::new(
-                std::io::ErrorKind::Other,
-                format!("Failed to fetch DNS records for domain {}", domain.name),
-            )));
+            return Err(Box::new(std::io::Error::other(format!(
+                "Failed to fetch DNS records for domain {}",
+                domain.name
+            ))));
         }
     };
 
@@ -408,14 +408,11 @@ async fn export_dns(
             response.status(),
             domain.name
         );
-        return Err(Box::new(std::io::Error::new(
-            std::io::ErrorKind::Other,
-            format!(
-                "Failed to fetch DNS records for domain {} - status: {}",
-                domain.name,
-                response.status()
-            ),
-        )));
+        return Err(Box::new(std::io::Error::other(format!(
+            "Failed to fetch DNS records for domain {} - status: {}",
+            domain.name,
+            response.status()
+        ))));
     }
 
     // Get the response as text
@@ -426,10 +423,10 @@ async fn export_dns(
                 "Error: Failed to read DNS records for domain {}: {}",
                 domain.name, e
             );
-            return Err(Box::new(std::io::Error::new(
-                std::io::ErrorKind::Other,
-                format!("Failed to read DNS records for domain {}", domain.name),
-            )));
+            return Err(Box::new(std::io::Error::other(format!(
+                "Failed to read DNS records for domain {}",
+                domain.name
+            ))));
         }
     };
 
@@ -443,10 +440,10 @@ async fn export_dns(
                 file_path.display(),
                 e
             );
-            return Err(Box::new(std::io::Error::new(
-                std::io::ErrorKind::Other,
-                format!("Failed to create file {}", file_path.display()),
-            )));
+            return Err(Box::new(std::io::Error::other(format!(
+                "Failed to create file {}",
+                file_path.display()
+            ))));
         }
     };
 
@@ -457,10 +454,10 @@ async fn export_dns(
                 "Error: Failed to write DNS records for domain {} to file: {}",
                 domain.name, e
             );
-            return Err(Box::new(std::io::Error::new(
-                std::io::ErrorKind::Other,
-                format!("Failed to write DNS records for domain {}", domain.name),
-            )));
+            return Err(Box::new(std::io::Error::other(format!(
+                "Failed to write DNS records for domain {}",
+                domain.name
+            ))));
         }
     };
 

@@ -1,0 +1,7 @@
+version: 2
+updates:
+  # Keep the release workflow's actions current so runtime deprecations are handled by PRs
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

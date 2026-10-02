@@ -18,6 +18,8 @@ Download the latest binary for your platform from the [releases page](https://gi
 | macOS (Apple Silicon) | `cloudflare-dns-exporter-macos-arm64` |
 | Windows (x86_64) | `cloudflare-dns-exporter-windows-amd64.exe` |
 
+The Linux binaries need glibc 2.39 or newer (Ubuntu 24.04, Debian 13, or later). On older distributions, [build from source](#building-from-source).
+
 **Linux / macOS:**
 
 ```bash
