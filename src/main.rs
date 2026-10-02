@@ -34,8 +34,9 @@ struct ResultInfo {
 #[derive(Debug, Deserialize)]
 struct CloudflareResponse {
     success: bool,
-    result: Vec<Domain>,
-    result_info: ResultInfo,
+    // Cloudflare returns `result: null` and omits `result_info` on error responses
+    result: Option<Vec<Domain>>,
+    result_info: Option<ResultInfo>,
     errors: Vec<CloudflareError>,
 }
 
@@ -160,24 +161,13 @@ async fn get_domains() -> Result<Vec<Domain>, Box<dyn std::error::Error>> {
         {
             Ok(resp) => resp,
             Err(e) => {
-                // Check if this is an authentication error
-                if e.is_status() {
-                    if let Some(status) = e.status() {
-                        if status == reqwest::StatusCode::UNAUTHORIZED
-                            || status == reqwest::StatusCode::FORBIDDEN
-                        {
-                            println!("Error: Authentication failed with Cloudflare API");
-                            println!("Please check that your API key and email are correct");
-                            process::exit(1);
-                        }
-                    }
-                }
-
                 println!("Error: Failed to connect to Cloudflare API: {}", e);
                 println!("Please check your internet connection and try again");
                 process::exit(1);
             }
         };
+
+        let status = response.status();
 
         // Parse response
         let cf_response: CloudflareResponse = match response.json().await {
@@ -194,14 +184,22 @@ async fn get_domains() -> Result<Vec<Domain>, Box<dyn std::error::Error>> {
             for error in cf_response.errors {
                 println!("  - {}", error.message);
             }
+            if status == reqwest::StatusCode::UNAUTHORIZED
+                || status == reqwest::StatusCode::FORBIDDEN
+            {
+                println!("Please check that your API key and email are correct");
+            }
             process::exit(1);
         }
 
-        let page_info = &cf_response.result_info;
+        let (Some(domains), Some(page_info)) = (cf_response.result, cf_response.result_info) else {
+            println!("Error: Cloudflare API response is missing domain or pagination data");
+            process::exit(1);
+        };
         println!("Fetching batch of {} DNS records ...", page_info.count);
 
         // Add domains to our list
-        all_domains.extend(cf_response.result);
+        all_domains.extend(domains);
 
         // Check if there are more pages
         if page_info.page >= page_info.total_pages {
