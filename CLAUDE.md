@@ -47,6 +47,15 @@ Structs: `CloudflareResponse`, `Domain`, `ResultInfo`, `CloudflareError` — all
 
 clap (CLI args), rpassword (hidden token input), reqwest (HTTP + JSON), tokio (async runtime), serde/serde_json (serialization), dotenvy (env file loading).
 
+## Releases
+
+`.github/workflows/release.yml` runs on a pushed `v*` tag, using only `actions/checkout`, the preinstalled `rustup` and the `gh` CLI (no third-party actions):
+
+1. Bump `version` in `Cargo.toml` on a branch and merge it to `main`
+2. Tag `main` (`git tag vX.Y.Z origin/main && git push origin vX.Y.Z`); the workflow creates a draft release (or keeps one created on GitHub), builds and uploads the five binaries, then publishes it
+
+Linux builds are pinned to `ubuntu-24.04` / `ubuntu-24.04-arm` because the build image's glibc sets the oldest supported Linux; change them deliberately and update the README note.
+
 ## Git Conventions
 
 - Never add `Co-Authored-By`, `Claude-Session`, "Generated with Claude Code" or any other AI/Claude attribution to commit messages, PR titles/descriptions, or other git metadata. `.claude/settings.json` disables Claude Code's automatic attribution.
