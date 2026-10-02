@@ -43,37 +43,53 @@ If you prefer to build from source, you'll need Rust installed:
 cargo build --release
 ```
 
-The compiled binary will be available in `target/release/export-cloudflare-dns`.
+The compiled binary will be available in `target/release/cloudflare-dns-exporter`.
 
 ## Configuration
 
-You will need to add your API credentials into a `.env` file:
-
-1. Create a `.env` file in the same directory as the binary:
+Create a `.env` file in the directory you run the binary from:
 
 ```bash
 cp .env.example .env
 ```
 
-2. Add your Cloudflare API key and email address to the `.env` file:
+Then add **one** of the following:
+
+**API token (recommended)** — create one in the Cloudflare dashboard under *My Profile → API Tokens* with `Zone:Read` and `DNS:Read` permissions:
+
+```bash
+CLOUDFLARE_API_TOKEN=your_api_token_here
+```
+
+**Global API key** — used only if no token is set:
 
 ```bash
 CLOUDFLARE_API_KEY=your_api_key_here
 CLOUDFLARE_USER_EMAIL=your_email_here
 ```
 
+These can also be set as regular environment variables instead of using a `.env` file.
+
 ## Usage
 
-Simply run the binary:
+```text
+Usage: cloudflare-dns-exporter [OPTIONS] [ENV_FILE]
 
-```bash
-./export-cloudflare-dns
+Arguments:
+  [ENV_FILE]  Env file to load credentials from [default: .env, if present]
+
+Options:
+  -o, --output <OUTPUT>  Directory to write the <domain>.txt files to [default: domains]
+  -h, --help             Print help
+  -V, --version          Print version
 ```
 
-If you want to use a custom environment file, you can specify it as an argument:
+Examples:
 
 ```bash
-./export-cloudflare-dns custom.env
+./cloudflare-dns-exporter                      # uses .env, writes to ./domains
+./cloudflare-dns-exporter custom.env           # uses a custom env file
+./cloudflare-dns-exporter -o backups/dns       # writes to a different directory
 ```
 
 ## Errors Explained
@@ -81,6 +97,10 @@ If you want to use a custom environment file, you can specify it as an argument:
 ### Error: Unknown X-Auth-Key or X-Auth-Email
 
 If you get an error message "Error: Unknown X-Auth-Key or X-Auth-Email", this means you haven't supplied a valid API key and email address in your environment file.
+
+### Error: Invalid API Token
+
+The `CLOUDFLARE_API_TOKEN` is wrong, expired, or revoked. Create a new token with `Zone:Read` and `DNS:Read` permissions.
 
 ## License
 
