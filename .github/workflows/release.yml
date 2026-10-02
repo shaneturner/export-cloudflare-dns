@@ -19,7 +19,7 @@ jobs:
   # Create the release as a draft so a failed build never publishes a partial release.
   # A release created beforehand on GitHub (e.g. with hand-written notes) is kept as is.
   create-release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Create draft release
         run: gh release view "$TAG" > /dev/null 2>&1 || gh release create "$TAG" --draft --verify-tag --generate-notes
@@ -75,7 +75,7 @@ jobs:
 
   publish-release:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Publish release
         run: gh release edit "$TAG" --draft=false

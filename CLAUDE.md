@@ -45,7 +45,7 @@ Structs: `CloudflareResponse`, `Domain`, `ResultInfo`, `CloudflareError` — all
 
 ## Dependencies
 
-clap (CLI args), rpassword (hidden token input), reqwest (HTTP + JSON), tokio (async runtime), serde/serde_json (serialization), dotenvy (env file loading).
+clap (CLI args), rpassword (hidden token input), reqwest (HTTP + JSON), tokio (async runtime), serde (deserialization), dotenvy (env file loading).
 
 ## Releases
 
