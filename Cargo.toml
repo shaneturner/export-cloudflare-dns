@@ -1,6 +1,6 @@
 [package]
 name = "cloudflare-dns-exporter"
-version = "1.1.0"
+version = "1.2.0"
 edition = "2021"
 authors = ["Shane Turner"]
 description = "Bulk export Cloudflare DNS records for all domains as text files"
@@ -15,3 +15,4 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 dotenvy = "0.15"
 clap = { version = "4.6.7", features = ["derive"] }
+rpassword = "7.5.4"
