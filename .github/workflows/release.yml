@@ -28,9 +28,10 @@ jobs:
     needs: create-release
     strategy:
       matrix:
+        # Linux runners are pinned: the build image's glibc sets the oldest Linux the binaries run on
         include:
           - target: x86_64-unknown-linux-gnu
-            os: ubuntu-latest
+            os: ubuntu-24.04
             binary_name: cloudflare-dns-exporter-linux-amd64
           - target: aarch64-unknown-linux-gnu
             os: ubuntu-24.04-arm
